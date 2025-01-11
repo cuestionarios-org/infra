@@ -46,6 +46,8 @@ jobs:
           echo "    build:" >> docker-compose.yml
           echo "      context: ./gateway-api" >> docker-compose.yml  # Usamos la carpeta clonada
           echo "      dockerfile: Dockerfile" >> docker-compose.yml
+          echo "      ports:" >> docker-compose.yml
+          echo "        - 5000:5000" >> docker-compose.yml
           echo "    environment:" >> docker-compose.yml
           echo "      SECRET_KEY: ${{ secrets.SECRET_KEY }}" >> docker-compose.yml
           echo "      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}" >> docker-compose.yml
@@ -72,7 +74,7 @@ jobs:
       - name: Build and run services
         run: |
           docker-compose up --build -d
-          sleep 10 # Esperar a que los servicios inicien
+          sleep 30 # Esperar a que los servicios inicien
           docker-compose ps
 
       # Verificar conectividad entre servicios
