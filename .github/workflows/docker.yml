@@ -80,11 +80,11 @@ jobs:
       # Verificar conectividad entre servicios
       - name: Test API Gateway
         run: |
-          curl -f http://localhost:5000/ || exit 1
+          curl -f http://gateway-api:5000/ || exit 1
 
       - name: Test Auth Service
         run: |
-          curl -f http://localhost:5001/ || exit 1
+          curl -f http://auth-service:5001/ || exit 1
 
       # Detener y limpiar
       - name: Clean up
