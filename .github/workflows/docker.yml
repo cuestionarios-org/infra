@@ -84,7 +84,10 @@ jobs:
 
       - name: Test Auth Service
         run: |
-          curl -f http://auth-service:5001/ || exit 1
+          curl -X POST http://auth-service:5000/auth/register \
+            -H "Content-Type: application/json" \
+            -d '{"username": "fomTestCI", "email": "fomTestCI@test.com", "password": "1234"}' || exit 1
+
 
       # Detener y limpiar
       - name: Clean up
