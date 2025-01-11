@@ -46,8 +46,8 @@ jobs:
           echo "    build:" >> docker-compose.yml
           echo "      context: ./gateway-api" >> docker-compose.yml  # Usamos la carpeta clonada
           echo "      dockerfile: Dockerfile" >> docker-compose.yml
-          echo "      ports:" >> docker-compose.yml
-          echo "        - 5000:5000" >> docker-compose.yml
+          echo "    ports:" >> docker-compose.yml
+          echo "      - 5000:5000" >> docker-compose.yml  # Exponer el puerto 5000
           echo "    environment:" >> docker-compose.yml
           echo "      SECRET_KEY: ${{ secrets.SECRET_KEY }}" >> docker-compose.yml
           echo "      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}" >> docker-compose.yml
