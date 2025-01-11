@@ -77,6 +77,11 @@ jobs:
           sleep 30 # Esperar a que los servicios inicien
           docker-compose ps
 
+      # Ejecutar migraciones de base de datos
+      - name: Run database migrations
+        run: |
+          docker-compose exec -T auth-service flask db upgrade
+
       # Verificar conectividad entre servicios
       - name: Test API Gateway
         run: |
@@ -87,7 +92,6 @@ jobs:
           curl -X POST http://localhost:5000/auth/register \
             -H "Content-Type: application/json" \
             -d '{"username": "fomTestCI", "email": "fomTestCI@test.com", "password": "1234"}' || exit 1
-
 
       # Detener y limpiar
       - name: Clean up
