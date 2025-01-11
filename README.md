@@ -93,6 +93,48 @@ Asegúrate de que la carpeta `instance` existe en el directorio `auth-service` y
 
 ---
 
+## 📜 Scripts
+
+Este repositorio incluye una carpeta `scripts/` con herramientas para automatizar tareas comunes. A continuación, se detallan los scripts disponibles y su uso:
+
+1. **Inicializar Servicios:**
+
+   Script: `scripts/init-services.sh`
+
+   Uso:
+   ```bash
+   ./scripts/init-services.sh
+   ```
+   Este script construye y levanta todos los servicios definidos en `docker-compose.yml`.
+
+2. **Limpiar Recursos:**
+
+   Script: `scripts/clean-resources.sh`
+
+   Uso:
+   ```bash
+   ./scripts/clean-resources.sh
+   ```
+   Este script detiene y elimina los contenedores, redes y volúmenes asociados a los servicios.
+
+3. **Verificar Dependencias:**
+
+   Script: `scripts/check-dependencies.sh`
+
+   Uso:
+   ```bash
+   ./scripts/check-dependencies.sh
+   ```
+   Este script verifica que Docker, Docker Compose y Git estén instalados y configurados correctamente.
+
+Para ejecutar los scripts, asegúrate de otorgar permisos de ejecución:
+
+```bash
+chmod +x ./scripts/*.sh
+```
+
+---
+
 ## 🛠️ Solución de Problemas
 
 - **Error de Conexión entre Servicios:**
