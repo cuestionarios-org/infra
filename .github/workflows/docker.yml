@@ -13,9 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Clonar el repositorio
-      - name: Checkout code
+      # Clonar el repositorio principal
+      - name: Checkout infra repository
         uses: actions/checkout@v3
+
+      # Clonar el repositorio del API Gateway
+      - name: Clone API Gateway repository
+        run: |
+          git clone https://github.com/cuestionarios-org/gateway-api.git
+
+      # Clonar el repositorio del Auth Service
+      - name: Clone Auth Service repository
+        run: |
+          git clone https://github.com/cuestionarios-org/auth-service.git
 
       # Configurar Docker
       - name: Set up Docker Buildx
@@ -26,6 +36,37 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
+
+      # Crear archivo docker-compose.yml con los servicios desde repositorios remotos y variables de entorno
+      - name: Set up docker-compose.yml
+        run: |
+          echo "version: '3.8'" > docker-compose.yml
+          echo "services:" >> docker-compose.yml
+          echo "  gateway-api:" >> docker-compose.yml
+          echo "    build:" >> docker-compose.yml
+          echo "      context: https://github.com/cuestionarios-org/gateway-api" >> docker-compose.yml
+          echo "      dockerfile: Dockerfile" >> docker-compose.yml
+          echo "    environment:" >> docker-compose.yml
+          echo "      SECRET_KEY: ${{ secrets.SECRET_KEY }}" >> docker-compose.yml
+          echo "      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}" >> docker-compose.yml
+          echo "      AUTH_SERVICE_URL: http://auth-service:5001" >> docker-compose.yml
+          echo "      QUIZ_SERVICE_URL: http://quiz-service:5002" >> docker-compose.yml
+          echo "      QA_SERVICE_URL: http://qa-service:5003" >> docker-compose.yml
+          echo "      PARTICIPATION_SERVICE_URL: http://participation-service:5004" >> docker-compose.yml
+          echo "      STATS_SERVICE_URL: http://stats-service:5005" >> docker-compose.yml
+          echo "      SERVICE_TIMEOUT: 5" >> docker-compose.yml
+          echo "      RETRY_ATTEMPTS: 3" >> docker-compose.yml
+          echo "      LIMITER_DEFAULT_LIMIT: 5 per minute" >> docker-compose.yml
+          echo "      LIMITER_STORAGE_URL: redis://localhost:6379" >> docker-compose.yml
+          echo "  auth-service:" >> docker-compose.yml
+          echo "    build:" >> docker-compose.yml
+          echo "      context: https://github.com/cuestionarios-org/auth-service" >> docker-compose.yml
+          echo "      dockerfile: Dockerfile" >> docker-compose.yml
+          echo "    environment:" >> docker-compose.yml
+          echo "      FLASK_ENV: development" >> docker-compose.yml
+          echo "      SECRET_KEY: ${{ secrets.SECRET_KEY }}" >> docker-compose.yml
+          echo "      DATABASE_URL: sqlite:///dev.db" >> docker-compose.yml
+          echo "      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}" >> docker-compose.yml
 
       # Iniciar servicios y probar la construcción
       - name: Build and run services
