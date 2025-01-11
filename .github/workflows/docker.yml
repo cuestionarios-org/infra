@@ -37,14 +37,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
-      # Crear archivo docker-compose.yml con los servicios desde repositorios remotos y variables de entorno
+      # Crear archivo docker-compose.yml con los servicios desde repositorios locales
       - name: Set up docker-compose.yml
         run: |
           echo "version: '3.8'" > docker-compose.yml
           echo "services:" >> docker-compose.yml
           echo "  gateway-api:" >> docker-compose.yml
           echo "    build:" >> docker-compose.yml
-          echo "      context: https://github.com/cuestionarios-org/gateway-api" >> docker-compose.yml
+          echo "      context: ./gateway-api" >> docker-compose.yml  # Usamos la carpeta clonada
           echo "      dockerfile: Dockerfile" >> docker-compose.yml
           echo "    environment:" >> docker-compose.yml
           echo "      SECRET_KEY: ${{ secrets.SECRET_KEY }}" >> docker-compose.yml
@@ -60,7 +60,7 @@ jobs:
           echo "      LIMITER_STORAGE_URL: redis://localhost:6379" >> docker-compose.yml
           echo "  auth-service:" >> docker-compose.yml
           echo "    build:" >> docker-compose.yml
-          echo "      context: https://github.com/cuestionarios-org/auth-service" >> docker-compose.yml
+          echo "      context: ./auth-service" >> docker-compose.yml  # Usamos la carpeta clonada
           echo "      dockerfile: Dockerfile" >> docker-compose.yml
           echo "    environment:" >> docker-compose.yml
           echo "      FLASK_ENV: development" >> docker-compose.yml
