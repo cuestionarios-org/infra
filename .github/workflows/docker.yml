@@ -84,7 +84,7 @@ jobs:
 
       - name: Test Auth Service
         run: |
-          curl -X POST http://auth-service:5000/auth/register \
+          curl -X POST http://localhost:5000/auth/register \
             -H "Content-Type: application/json" \
             -d '{"username": "fomTestCI", "email": "fomTestCI@test.com", "password": "1234"}' || exit 1
 
