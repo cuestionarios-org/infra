@@ -78,6 +78,27 @@ cd infra
    - 🌐 **API Gateway:** Disponible en [http://localhost:5000](http://localhost:5000)
    - 🔒 **Auth Service:** Disponible en [http://localhost:5001](http://localhost:5001)
 
+4. **Prueba ENDPOINT**
+   Verificar endopints basicos con curl
+   - Home
+   ```bash
+   curl -X GET http://localhost:5000
+   ```  
+   Deberia responder con unos datos simples para cheueo de que funciona
+   - Login
+   ```bash
+   curl -X POST http://localhost:5000/auth/login \
+   -H "Content-Type: application/json" \
+   -d '{"email": "fom6@test.com", "password": "1234"}'
+   ```
+   Deberia retrnar un token. Con ese token podemos listar los usuarios:
+   - Listado de usuarios ruta protegida, token y user admin
+   ```bash
+   curl -X GET http://localhost:5000/auth/list \
+   -H "Authorization: Bearer YOUR_TOKEN_HERE"
+   ```   
+
+
 ---
 
 ## 🗂️ Volúmenes
