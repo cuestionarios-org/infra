@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   api-gateway:
     build:
@@ -6,9 +7,10 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - .env
+      - ../gateway-api/.env.prod
     depends_on:
       - auth-service
+      - qa-service
     environment:
       FLASK_ENV: ${FLASK_ENV}
     networks:
@@ -25,6 +27,38 @@ services:
       - ../auth-service/instance:/app/instance 
     networks:
       - my-network  # Especificamos la misma red
+
+  postgres:
+    image: postgres:15
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin1234
+      POSTGRES_DB: db_aq
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Volumen gestionado por Docker
+    networks:
+      - my-network  # Especificamos la misma red
+
+  qa-service:
+    build:
+      context: ../qa-service
+    ports:
+      - "5003:5003"  # Puerto en el que se expone el servicio
+    env_file:
+      - ../qa-service/.env  # Archivo de configuración de entorno
+    depends_on:
+      - postgres  # Asegurarse de que postgres esté listo antes de iniciar el servicio
+    networks:
+      - my-network  # Especificamos la misma red
+    environment:
+      DATABASE_URL: postgres://admin:admin1234@postgres:5432/db_aq  # Conexión a la base de datos
+
+volumes:
+  postgres_data:  # Docker se encarga de gestionarlo
+    external: false
 
 networks:
   my-network:   # Definimos la red
