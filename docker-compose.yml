@@ -7,14 +7,13 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - ../gateway-api/.env.prod
+      - ${ENV_FILE}  # Archivo de entorno especificado al ejecutar
     depends_on:
       - auth-service
       - qa-service
-    environment:
-      FLASK_ENV: ${FLASK_ENV}
+    restart: always
     networks:
-      - my-network  # Especificamos la red
+      - my-network
 
   auth-service:
     build:
@@ -22,44 +21,49 @@ services:
     ports:
       - "5001:5001"
     env_file:
-      - .env
+      - ${ENV_FILE}  # Archivo de entorno especificado al ejecutar
     volumes:
       - ../auth-service/instance:/app/instance 
+    restart: always
     networks:
-      - my-network  # Especificamos la misma red
+      - my-network
 
   postgres:
     image: postgres:15
     container_name: postgres_container
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin1234
-      POSTGRES_DB: db_aq
+    # environment:
+    #   POSTGRES_USER: ${POSTGRES_USER}
+    #   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    #   POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
+    env_file:
+      - ${ENV_FILE}  # Archivo de entorno especificado al ejecutar
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Volumen gestionado por Docker
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
     networks:
-      - my-network  # Especificamos la misma red
+      - my-network
 
   qa-service:
     build:
       context: ../qa-service
     ports:
-      - "5003:5003"  # Puerto en el que se expone el servicio
+      - "5003:5003"
     env_file:
-      - ../qa-service/.env   # Archivo de configuración de entorno
+      - ${ENV_FILE}  # Archivo de entorno especificado al ejecutar
     depends_on:
-      - postgres  # Asegurarse de que postgres esté listo antes de iniciar el servicio
-    networks:
-      - my-network  # Especificamos la misma red
+      - postgres
     volumes:
       - ../qa-service:/app
+    restart: always
+    networks:
+      - my-network
 
 volumes:
-  postgres_data:  # Docker se encarga de gestionarlo
+  postgres_data:
     external: false
 
 networks:
-  my-network:   # Definimos la red
+  my-network:
     driver: bridge
