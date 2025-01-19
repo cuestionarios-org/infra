@@ -6,6 +6,8 @@ services:
       context: ../gateway-api
     ports:
       - "5000:5000"
+    # profiles: 
+    #   - nolevantar  
     env_file:
       - ${ENV_FILE}  # Archivo de entorno especificado al ejecutar
     depends_on:
@@ -28,15 +30,36 @@ services:
     networks:
       - my-network
 
-  postgres:
+  postgres-qa:
     image: postgres:15
-    container_name: postgres_container
+    container_name: postgres_qa
     ports:
       - "5432:5432"
     env_file:
-      - ${ENV_FILE}  # Archivo de entorno especificado al ejecutar
+      - ${ENV_FILE}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_QA}  # Base de datos para QA
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_qa_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - my-network
+
+  postgres-competition:
+    image: postgres:15
+    container_name: postgres_competition
+    ports:
+      - "5433:5432"  # Cambia el puerto para evitar conflictos
+    env_file:
+      - ${ENV_FILE}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_COMPETITION}  # Base de datos para Competition
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_competition_data:/var/lib/postgresql/data
     restart: always
     networks:
       - my-network
@@ -59,9 +82,11 @@ services:
       - my-network
 
 volumes:
-  postgres_data:
+  postgres_qa_data:
     external: false
-
+  postgres_competition_data:
+    external: false
+    
 networks:
   my-network:
     driver: bridge
