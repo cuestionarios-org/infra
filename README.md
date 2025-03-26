@@ -1,6 +1,6 @@
 # 📦 Repositorio de Infraestructura (Infra)
 
-Este repositorio contiene la configuración de la infraestructura utilizando Docker Compose para orquestar los servicios necesarios de la aplicación. Actualmente incluye los servicios `api-gateway` y `auth-service`.
+Este repositorio contiene la configuración de la infraestructura utilizando Docker Compose para orquestar los servicios necesarios de la aplicación.
 
 ## 📁 Contenido del Repositorio
 
@@ -33,22 +33,22 @@ cd infra
 
 ## ⚙️ Configuración
 
-1. **Archivo `.env`**
+1. **Variables de entorno**
 
-   Asegúrate de que el archivo `.env` esté presente en el directorio. Contiene configuraciones como el entorno de ejecución:
+   - El archivo `.Template_env` se copiara y se renombrara `.env`
+   - El archivo `.Template_env.dev` se copiara y se renombrara `.env.dev`, aqui se encuentran todas las variables para levantar los servicios en desarrollo.
 
-   ```
-   FLASK_ENV=development
-   ```
 
 2. **Estructura de Directorios**
 
-   El repositorio presupone que los servicios `api-gateway` y `auth-service` están ubicados en directorios adyacentes a la carpeta de infraestructura:
+   El repositorio presupone que los servicios `api-gateway`, `auth-service`, etc, están ubicados en directorios adyacentes a la carpeta de infraestructura:
 
    ```
    /infra
    /gateway-api
    /auth-service
+   /competition-service
+   /qa-service
    ```
 
 ---
@@ -63,7 +63,7 @@ cd infra
    docker-compose up --build
    ```
 
-   Esto iniciará los servicios `api-gateway` y `auth-service`.
+   Esto iniciará los servicios.
 
 2. **Verificar Servicios Activos**
 
@@ -72,7 +72,7 @@ cd infra
    ```bash
    docker ps
    ```
-
+### TODO 25/3/25 Editar hacia abajo segun vaya probando
 3. **Acceso a los Servicios**
 
    - 🌐 **API Gateway:** Disponible en [http://localhost:5000](http://localhost:5000)
@@ -114,7 +114,7 @@ Asegúrate de que la carpeta `instance` existe en el directorio `auth-service` y
 
 ---
 
-## 📜 Scripts
+## 📜 Scripts (TODO 25/3/25 debo ejecutar algo o no ?)
 
 Este repositorio incluye una carpeta `scripts/` con herramientas para automatizar tareas comunes. A continuación, se detallan los scripts disponibles y su uso:
 
