@@ -1,0 +1,59 @@
+
+# Archivo .env
+
+# Globales
+JWT_SECRET_KEY=jwt_dev_key
+FLASK_ENV=development
+SECRET_KEY=dev_secret_key
+
+
+# api gateway
+AUTH_SERVICE_URL=http://auth-service:5001
+QUIZ_SERVICE_URL=http://quiz-service:5002
+
+QA_SERVICE_URL=http://qa-service:5003
+# QA_SERVICE_URL=http://172.17.0.1:5003 # Al desvincularlo del yml y correrlo por separado
+# QA_SERVICE_URL=http://host.docker.internal:5003
+
+COMPETITION_SERVICE_URL=http://competitions-service:5006
+# COMPETITION_SERVICE_URL=http://172.17.0.1:5006
+
+PARTICIPATION_SERVICE_URL=http://participation-service:5004
+STATS_SERVICE_URL=http://stats-service:5005
+
+
+SERVICE_TIMEOUT=5
+RETRY_ATTEMPTS=3
+LIMITER_DEFAULT_LIMIT=5 per minute
+LIMITER_STORAGE_URL=redis://localhost:6379
+
+# auth service
+DATABASE_URL=sqlite:///dev.db
+
+# qa service
+FLASK_APP=run.py
+# DATABASE_URL=postgresql+psycopg2://admin:admin1234@postgres:5432/db_aq
+# SECRET_KEY=mi_clave_secreta
+# QA_DATABASE_URL=postgresql+psycopg2://admin:admin1234@postgres-qa:5432/db_aq
+QA_POSTGRES_HOST=postgres-qa
+QA_POSTGRES_PORT=5432
+QA_POSTGRES_USER=admin
+QA_POSTGRES_PASSWORD=admin1234
+QA_POSTGRES_DB=db_aq
+QA_SEED_DB=si
+
+
+# competition service
+# COMPETITION_DATABASE_URL=postgresql+psycopg2://admin:admin1234@postgres-competition:5433/db_competition
+COMPETITION_POSTGRES_HOST=postgres-competition
+COMPETITION_POSTGRES_PORT=5432
+COMPETITION_POSTGRES_USER=admin
+COMPETITION_POSTGRES_PASSWORD=admin1234
+COMPETITION_POSTGRES_DB=db_competition
+COMPETITION_SEED_DB=si
+
+
+# postgres Genrals
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin1234
+

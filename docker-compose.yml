@@ -75,7 +75,7 @@ services:
   
   competitions-service:
     build:
-      context: ../competitions-service
+      context: ../competition-service
     # profiles: 
     #   - nolevantar
     ports:
@@ -85,7 +85,7 @@ services:
     depends_on:
       - postgres-competition
     volumes:
-      - ../competitions-service:/app
+      - ../competition-service:/app
     restart: always
     networks:
       - my-network
