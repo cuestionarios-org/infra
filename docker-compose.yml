@@ -24,8 +24,10 @@ services:
       - "5001:5001"
     env_file:
       - ${ENV_FILE}  # Archivo de entorno especificado al ejecutar
+    depends_on:
+      - postgres-auth
     volumes:
-      - ../auth-service/instance:/app/instance 
+      - ../auth-service:/app
     restart: always
     networks:
       - my-network
@@ -52,6 +54,19 @@ services:
       - ${ENV_FILE}
     volumes:
       - postgres_competition_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - my-network
+  
+  postgres-auth:
+    image: postgres:15
+    container_name: postgres-auth
+    ports:
+      - "5434:5432"
+    env_file:
+      - ${ENV_FILE}
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
     restart: always
     networks:
       - my-network
@@ -90,10 +105,29 @@ services:
     networks:
       - my-network
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-cuestionarios
+    restart: always
+    ports:
+      - "5050:80"  # Accederás en http://localhost:5050
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com  # Cambia esto si quieres otro usuario
+      PGADMIN_DEFAULT_PASSWORD: admin1234  # Cambia la contraseña si es necesario
+    depends_on:
+      - postgres-auth
+      - postgres-qa
+      - postgres-competition
+    networks:
+      - my-network
+
+
 volumes:
   postgres_qa_data:
     external: false
   postgres_competition_data:
+    external: false
+  postgres_auth_data:
     external: false
 
 networks:

@@ -37,6 +37,7 @@ cd infra
 
    - El archivo `.Template_env` se copiara y se renombrara `.env`
    - El archivo `.Template_env.dev` se copiara y se renombrara `.env.dev`, aqui se encuentran todas las variables para levantar los servicios en desarrollo.
+   - Estas variables son esenciales para los puertos y servers de todos los servicios.
 
 
 2. **Estructura de Directorios**
@@ -54,10 +55,12 @@ cd infra
 ---
 
 ## 🚀 Uso
+**Nota:** Ojo con los archivos .sh, desde vscode cambiar el CRLf a LF (abajo a la derecha)
+(TODO_26/3/25: Hacer en auto)
 
 1. **Construir y Levantar los Servicios**
-
-   Ejecuta el siguiente comando para construir y levantar los servicios:
+   Este repo como solo es de infraestructura no hay nada que instalar, solo debemos estar en el directorio donde esta el `docker-compose.yml` y desde alli:
+   - Ejecuta el siguiente comando para construir y levantar los servicios:
 
    ```bash
    docker-compose up --build
@@ -72,6 +75,13 @@ cd infra
    ```bash
    docker ps
    ```
+   o un listado mas elegante:
+   ```bash
+   docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+   ```
+   ![Listado de servicios](imagenes/lista_servicios.png)
+
+
 ### TODO 25/3/25 Editar hacia abajo segun vaya probando
 3. **Acceso a los Servicios**
 
@@ -84,7 +94,13 @@ cd infra
    ```bash
    curl -X GET http://localhost:5000
    ```  
-   Deberia responder con unos datos simples para cheueo de que funciona
+   Deberia responder con unos datos simples para chequeo de que funciona
+   - Register
+   ```bash
+   curl -X POST http://localhost:5000/auth/register \
+   -H "Content-Type: application/json" \
+   -d '{"username":"test01", "email": "test01@test.com", "password": "1234"}'
+   ```
    - Login
    ```bash
    curl -X POST http://localhost:5000/auth/login \
@@ -97,6 +113,52 @@ cd infra
    curl -X GET http://localhost:5000/auth/list \
    -H "Authorization: Bearer YOUR_TOKEN_HERE"
    ```   
+   ---
+5. PGAdmin
+
+🔗 Acceder a pgAdmin
+Abre tu navegador y ve a http://localhost:5050
+
+Inicia sesión con:
+
+Usuario: admin@example.com
+
+Contraseña: admin1234
+
+Agrega una conexión para cada base de datos.
+
+🔧 Configurar conexiones en pgAdmin
+Para agregar cada base de datos:
+
+Ve a Servers → Add New Server
+
+En la pestaña General:
+
+Name: PostgreSQL (o cualquier nombre)
+
+En la pestaña Connection:
+
+Host:
+
+postgres-auth (para la base auth)
+
+postgres-qa (para qa)
+
+postgres-competition (para competition)
+
+Port:
+
+5434 para auth
+
+5432 para qa
+
+5433 para competition
+
+Username y Password: Usa los valores de tu .env
+
+ ![Listado de servicios](imagenes/pg_server_conection.png)
+
+💡 Nota: Si accedes desde fuera de Docker (por ejemplo, con psql en tu PC), usa localhost en lugar del nombre del servicio.
 
 
 ---
