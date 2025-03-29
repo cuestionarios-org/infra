@@ -101,13 +101,13 @@ cd infra
    -H "Content-Type: application/json" \
    -d '{"username":"test01", "email": "test01@test.com", "password": "1234"}'
    ```
-   - Login
+   - Login, como admin
    ```bash
    curl -X POST http://localhost:5000/auth/login \
    -H "Content-Type: application/json" \
-   -d '{"email": "fom6@test.com", "password": "1234"}'
+   -d '{"email": "admin@example.com", "password": "admin123"}'
    ```
-   Deberia retrnar un token. Con ese token podemos listar los usuarios:
+   Deberia retornar un token. Con ese token podemos listar los usuarios:
    - Listado de usuarios ruta protegida, token y user admin
    ```bash
    curl -X GET http://localhost:5000/auth/list \
