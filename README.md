@@ -88,13 +88,15 @@ cd infra
    - 🌐 **API Gateway:** Disponible en [http://localhost:5000](http://localhost:5000)
    - 🔒 **Auth Service:** Disponible en [http://localhost:5001](http://localhost:5001)
 
-4. **Prueba ENDPOINT**
+# 4. **Prueba ENDPOINT**
    Verificar endopints basicos con curl
    - Home
    ```bash
    curl -X GET http://localhost:5000
    ```  
    Deberia responder con unos datos simples para chequeo de que funciona
+   ### AUTH
+   
    - Register
    ```bash
    curl -X POST http://localhost:5000/auth/register \
@@ -113,6 +115,78 @@ cd infra
    curl -X GET http://localhost:5000/auth/list \
    -H "Authorization: Bearer YOUR_TOKEN_HERE"
    ```   
+
+   - Listado de cuestionarios
+   ```bash
+   curl -X GET http://localhost:5000/auth/list \
+   -H "Authorization: Bearer YOUR_TOKEN_HERE"
+   ```   
+   El resultado deberia ser un listado de usuarios.
+   
+   ### Preguntas
+
+   - Listado de categorias para las preguntas
+   ```bash
+   curl -X GET http://localhost:5000/questions/categories/
+   ``` 
+   - Listado de preguntas
+   ```bash
+   curl -X GET http://localhost:5000/questions/
+   ```
+   - Listado de preguntas por categorias
+   ```bash
+   curl -X GET http://localhost:5000/questions/1 \
+   -H "Authorization: Bearer YOUR_TOKEN_HERE"
+   ```
+
+   - Obtener una pregunta
+   ```bash
+   curl -X GET http://localhost:5000/questions/1 \
+   -H "Authorization: Bearer YOUR_TOKEN_HERE"
+   ```
+   - Agregar una pregunta
+      - La pregunta ya se agrega con sus respuestas
+      - Las respuestas pueden ser existentes o nuevas, normalmente son nuevas.
+      - Datos minimos del body para crear una pregunta con sus respuestas:
+      ```json
+      {"answers": [
+      {
+         "is_correct": false,
+         "text": "Un tipo de software"
+      },
+      {
+         "is_correct": true,
+         "text": "Una simulación de procesos humanos por máquinas"
+      },
+      {
+         "is_correct": false,
+         "text": "Un lenguaje de programación"
+      }],"question": {
+      "category_id": 1,
+      "text": "¿Qué !!!es la inteligencia artificial?" }}
+   
+
+   - Modifica una pregunta
+      - La pregunta se modifica y elimina las respuestas anteriores generando las nuevas.
+      - Datos minimos del body para crear una pregunta con sus respuestas:
+      ```json
+      {"answers": [
+      {
+         "is_correct": false,
+         "text": "Un tipo de software"
+      },
+      {
+         "is_correct": true,
+         "text": "Una simulación de procesos humanos por máquinas"
+      },
+      {
+         "is_correct": false,
+         "text": "Un lenguaje de programación"
+      }],"question": {
+      "text": "¿Qué es la inteligencia artificial?" }}
+   ```
+
+
    ---
 5. PGAdmin
 
@@ -163,20 +237,8 @@ Username y Password: Usa los valores de tu .env
 
 ---
 
-## 🗂️ Volúmenes
 
-El `auth-service` utiliza un volumen para compartir la carpeta `instance` con el contenedor:
-
-```yaml
-volumes:
-  - ../auth-service/instance:/app/instance
-```
-
-Asegúrate de que la carpeta `instance` existe en el directorio `auth-service` y contiene los archivos necesarios.
-
----
-
-## 📜 Scripts (TODO 25/3/25 debo ejecutar algo o no ?)
+## 📜 Scripts
 
 Este repositorio incluye una carpeta `scripts/` con herramientas para automatizar tareas comunes. A continuación, se detallan los scripts disponibles y su uso:
 
@@ -232,8 +294,6 @@ chmod +x ./scripts/*.sh
     - "nuevo-puerto:5001"  # Para auth-service
   ```
 
-- **Permisos de Archivos:**
-  Si encuentras problemas con permisos, verifica que el usuario que ejecuta Docker tenga acceso a la carpeta `auth-service/instance`.
 
 ---
 
