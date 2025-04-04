@@ -1,0 +1,16 @@
+# This file is used to override the default docker-compose.yml file.
+services:
+  service-api-gateway:
+    volumes:
+      - ../gateway-api:/app
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt && python src/main.py"
+  service-auth:
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt && python app.py"
+  service-qa:
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt && python run.py"
+  service-competition:
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt && python run.py" 

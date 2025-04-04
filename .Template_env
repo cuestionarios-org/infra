@@ -1,2 +1,73 @@
-# ENV_FILE=./.env.prod
-ENV_FILE=./.env.dev
+# ==========================
+# 📌 ENTORNO DE EJECUCIÓN
+# ==========================
+
+FLASK_ENV=development
+FLASK_APP=run.py
+SECRET_KEY=dev_secret_key
+JWT_SECRET_KEY=jwt_dev_key
+
+# ==========================
+# 🚀 CONFIGURACIÓN GLOBAL
+# ==========================
+API_PORT=5000
+SERVICE_TIMEOUT=5
+RETRY_ATTEMPTS=3
+LIMITER_DEFAULT_LIMIT=5 per minute
+LIMITER_STORAGE_URL=redis://localhost:6379
+
+# ==========================
+# 🔑 AUTENTICACIÓN (AUTH SERVICE)
+# ==========================
+AUTH_PORT=5001
+AUTH_HOST=service-auth
+
+# 📌 Base de Datos (Auth)
+AUTH_POSTGRES_HOST=postgres-auth
+AUTH_POSTGRES_PORT=5434
+AUTH_POSTGRES_USER=admin
+AUTH_POSTGRES_PASSWORD=admin1234
+AUTH_POSTGRES_DB=db_auth
+AUTH_SEED_DB=si
+
+# ==========================
+# 🧪 QA SERVICE
+# ==========================
+QA_PORT=5003
+QA_HOST=service-qa
+
+# 📌 Base de Datos (QA)
+QA_POSTGRES_HOST=postgres-qa
+QA_POSTGRES_PORT=5432
+QA_POSTGRES_USER=admin
+QA_POSTGRES_PASSWORD=admin1234
+QA_POSTGRES_DB=db_aq
+QA_SEED_DB=si
+
+# ==========================
+# 🏆 COMPETITION SERVICE
+# ==========================
+COMPETITION_PORT=5006
+COMPETITION_HOST=service-competition
+
+# 📌 Base de Datos (Competition)
+COMPETITION_POSTGRES_HOST=postgres-competition
+COMPETITION_POSTGRES_PORT=5433
+COMPETITION_POSTGRES_USER=admin
+COMPETITION_POSTGRES_PASSWORD=admin1234
+COMPETITION_POSTGRES_DB=db_competition
+COMPETITION_SEED_DB=si
+
+# ==========================
+# 🗄️ POSTGRESQL GENERAL
+# ==========================
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin1234
+POSTGRES_PORT=5432
+
+# ==========================
+# 📊 PGADMIN CONFIG
+# ==========================
+PGADMIN_PORT=5050
+PGADMIN_DEFAULT_EMAIL=admin@example.com
+PGADMIN_DEFAULT_PASSWORD=admin1234

@@ -54,11 +54,11 @@ cd infra
 
 ---
 
-## 🚀 Uso
+# 🚀 Uso
 **Nota:** Ojo con los archivos .sh, desde vscode cambiar el CRLf a LF (abajo a la derecha)
 (TODO_26/3/25: Hacer en auto)
 
-1. **Construir y Levantar los Servicios**
+# 1. Construir y Levantar los Servicios
    Este repo como solo es de infraestructura no hay nada que instalar, solo debemos estar en el directorio donde esta el `docker-compose.yml` y desde alli:
    - Ejecuta el siguiente comando para construir y levantar los servicios:
 
@@ -68,7 +68,7 @@ cd infra
 
    Esto iniciará los servicios.
 
-2. **Verificar Servicios Activos**
+# 2. Verificar Servicios Activos
 
    Puedes verificar los servicios activos utilizando el siguiente comando:
 
@@ -82,20 +82,22 @@ cd infra
    ![Listado de servicios](imagenes/lista_servicios.png)
 
 
-### TODO 25/3/25 Editar hacia abajo segun vaya probando
-3. **Acceso a los Servicios**
+
+# 3. Acceso a los Servicios
 
    - 🌐 **API Gateway:** Disponible en [http://localhost:5000](http://localhost:5000)
    - 🔒 **Auth Service:** Disponible en [http://localhost:5001](http://localhost:5001)
+   - **QA Service:** Disponible en [http://localhost:5003](http://localhost:5003)
+   - **Competition Service:** Disponible en [http://localhost:5006](http://localhost:5006)
 
-# 4. **Prueba ENDPOINT**
+# 4. Prueba ENDPOINT
    Verificar endopints basicos con curl
-   - Home
+- ## Home
    ```bash
    curl -X GET http://localhost:5000
    ```  
    Deberia responder con unos datos simples para chequeo de que funciona
-   ### AUTH
+- ## AUTH **/auth**
    
    - Register
    ```bash
@@ -116,18 +118,20 @@ cd infra
    -H "Authorization: Bearer YOUR_TOKEN_HERE"
    ```   
 
-   - Listado de cuestionarios
-   ```bash
-   curl -X GET http://localhost:5000/auth/list \
-   -H "Authorization: Bearer YOUR_TOKEN_HERE"
-   ```   
    El resultado deberia ser un listado de usuarios.
    
-   ### Preguntas
+- ## Preguntas **/questions**
 
    - Listado de categorias para las preguntas
    ```bash
    curl -X GET http://localhost:5000/questions/categories/
+   ``` 
+   - Agregar categoria para las preguntas (El name debe ser unico)
+   ```bash
+   curl -X POST http://localhost:5000/questions/categories/\
+   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+   -d '{"description": "Noticias y eventos deportivos",
+    "name": "Deportes"}'
    ``` 
    - Listado de preguntas
    ```bash
@@ -184,10 +188,50 @@ cd infra
          "text": "Un lenguaje de programación"
       }],"question": {
       "text": "¿Qué es la inteligencia artificial?" }}
+   
+
+- ## Cuestionarios   **/quizzes**
+   - Listado de cuestionarios
+   ```bash
+   curl -X GET http://localhost:5000/quizzes \
+   -H "Authorization: Bearer YOUR_TOKEN_HERE"
    ```
+   - Obtener un cuestionario por id
+   ```bash
+   curl -X GET http://localhost:5000/quizzes/id \
+   -H "Authorization: Bearer YOUR_TOKEN_HERE"
+   ```
+   - Agregar un Cuestionario
+      - El cuestionario se agrega minimamente con title y category_id
+      - Datos minimos del body para crear un cuestionario:
+      ```json
+      {
+         "quiz":{
+            "title": "Primer Cuestionario",
+            "category_id": 1
+         }         
+      }
+      - Lo mas sano seria crearlo ya con preguntas asociadas, los ids deben ser pregutas que ya existan en el sistema, sino dara falla:
+      ```json
+      {
+         "quiz":{
+            "title": "Primer Cuestionario",
+            "category_id": 1
+         },
+         "question_ids": [1,5,6,7] 
+      }
+   - Modificar un Cuestionario
+      - Se envia en el body los datos del quiz que se deseen modificar.
+      - NO MODIFICA PREGUNTAS
+       ```json
+      {
+         "quiz":{
+            "title": "Primer Cuestionario",
+            "category_id": 1
+         }        
+      }
 
-
-   ---
+---
 5. PGAdmin
 
 🔗 Acceder a pgAdmin
@@ -319,3 +363,4 @@ Si deseas contribuir al repositorio, abre un pull request o informa de un proble
 
 Este proyecto está licenciado bajo los términos de [MIT License](LICENSE).
 
+Desarrollado con ❤️ por [Fernando Masino](https://github.com/fom78).

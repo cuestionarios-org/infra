@@ -1,31 +1,33 @@
-version: '3.8'
 
 services:
-  api-gateway:
+  # 🔹 API Gateway
+  service-api-gateway:
     build:
       context: ../gateway-api
-    container_name: cont-api-gateway
+      args:
+          API_PORT: "${API_PORT}"
+    container_name: cont-service-api-gateway
     ports:
-      - "5000:5000"
-    # profiles: 
-    #   - nolevantar  
+      - "${API_PORT}:${API_PORT}"
     env_file:
-      - ${ENV_FILE}  # Archivo de entorno especificado al ejecutar
+      - .env
     depends_on:
-      - auth-service
-      # - qa-service
+      - service-auth
     restart: always
     networks:
       - my-network
-
-  auth-service:
+  
+  # 🔹 Servicios
+  service-auth:
     build:
       context: ../auth-service
-    container_name: cont-auth-service
+      args:
+          AUTH_PORT: "${AUTH_PORT}"
+    container_name: cont-service-auth
     ports:
-      - "5001:5001"
+      - "${AUTH_PORT}:${AUTH_PORT}"
     env_file:
-      - ${ENV_FILE}  # Archivo de entorno especificado al ejecutar
+      - .env
     depends_on:
       - postgres-auth
     volumes:
@@ -34,13 +36,80 @@ services:
     networks:
       - my-network
 
+  service-qa:
+    build:
+      context: ../qa-service
+      args:
+          QA_PORT: "${QA_PORT}"  # Pasar el puerto como ARG
+    env_file:
+      - .env
+    ports:
+      - "${QA_PORT}:${QA_PORT}"
+    container_name: cont-service-qa
+    depends_on:
+      - postgres-qa
+    volumes:
+      - ../qa-service:/app
+    restart: always
+    networks:
+      - my-network
+
+  service-competition:
+    build:
+      context: ../competition-service
+      args:
+          COMPETITION_PORT: "${COMPETITION_PORT}"
+    ports:
+      - "${COMPETITION_PORT}:${COMPETITION_PORT}"
+    container_name: cont-service-competition
+    env_file:
+      - .env
+    depends_on:
+      - postgres-competition
+    volumes:
+      - ../competition-service:/app
+    restart: always
+    networks:
+      - my-network
+
+  # 🔹 Herramientas
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-cuestionarios
+    restart: always
+    ports:
+      - "${PGADMIN_PORT}:80"  # Acceder en http://localhost:5050
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    depends_on:
+      - postgres-auth
+      - postgres-qa
+      - postgres-competition
+    networks:
+      - my-network
+
+  # 🔹 Bases de datos
+  postgres-auth:
+    image: postgres:15
+    container_name: postgres-auth
+    ports:
+      - "${AUTH_POSTGRES_PORT}:${POSTGRES_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - my-network
+
   postgres-qa:
     image: postgres:15
     container_name: postgres-qa
     ports:
-      - "5432:5432"
+      - "${QA_POSTGRES_PORT}:5432"
     env_file:
-      - ${ENV_FILE}
+      - .env
     volumes:
       - postgres_qa_data:/var/lib/postgresql/data
     restart: always
@@ -51,79 +120,16 @@ services:
     image: postgres:15
     container_name: postgres-competition
     ports:
-      - "5433:5432"  # Cambia el puerto para evitar conflictos
+      - "${COMPETITION_POSTGRES_PORT}:5432"  # Puerto cambiado para evitar conflictos
     env_file:
-      - ${ENV_FILE}
+      - .env
     volumes:
       - postgres_competition_data:/var/lib/postgresql/data
     restart: always
     networks:
       - my-network
-  
-  postgres-auth:
-    image: postgres:15
-    container_name: postgres-auth
-    ports:
-      - "5434:5432"
-    env_file:
-      - ${ENV_FILE}
-    volumes:
-      - postgres_auth_data:/var/lib/postgresql/data
-    restart: always
-    networks:
-      - my-network
 
-  qa-service:
-    build:
-      context: ../qa-service
-    # profiles: 
-    #   - nolevantar
-    ports:
-      - "5003:5003"
-    env_file:
-      - ${ENV_FILE}  # Archivo de entorno especificado al ejecutar
-    depends_on:
-      - postgres-qa
-    volumes:
-      - ../qa-service:/app
-    restart: always
-    networks:
-      - my-network
-  
-  competitions-service:
-    build:
-      context: ../competition-service
-    # profiles: 
-    #   - nolevantar
-    ports:
-      - "5006:5006"
-    env_file:
-      - ${ENV_FILE}  # Archivo de entorno especificado al ejecutar
-    depends_on:
-      - postgres-competition
-    volumes:
-      - ../competition-service:/app
-    restart: always
-    networks:
-      - my-network
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin-cuestionarios
-    restart: always
-    ports:
-      - "5050:80"  # Accederás en http://localhost:5050
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com  # Cambia esto si quieres otro usuario
-      PGADMIN_DEFAULT_PASSWORD: admin1234  # Cambia la contraseña si es necesario
-    depends_on:
-      - postgres-auth
-      - postgres-qa
-      - postgres-competition
-    networks:
-      - my-network
-
-
+# 🔹 Definición de volúmenes
 volumes:
   postgres_qa_data:
     external: false
@@ -132,6 +138,7 @@ volumes:
   postgres_auth_data:
     external: false
 
+# 🔹 Definición de redes
 networks:
   my-network:
     driver: bridge
