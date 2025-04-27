@@ -230,6 +230,102 @@ cd infra
             "category_id": 1
          }        
       }
+- ## Competencias   **/competitions**
+   - Listado de competencias
+   ```bash
+   curl -X GET http://localhost:5000/competitions
+   ```
+   - Obtener una competencia por id
+   ```bash
+   curl -X GET http://localhost:5000/competitions/id \
+   -H "Authorization: Bearer YOUR_TOKEN_HERE"
+   ```
+   - Agregar una Competencia
+      - Campos obligatorios: 'title', 'start_date', 'end_date', 'created_by' (viene por el token)
+      - Datos minimos del body para crear una competencia:
+      ```json
+      {
+         "title": "Primer Competencia",
+         "start_date": "2025-04-11",
+         "end_date": "2025-04-21",
+      }   
+      - Se puede ya en la creacion definir los cuestionarios de la competencia, luego se pueden ir agregando mas.  
+      - Datos minimos de cada cuestionario es el quizz_id:    
+      ```json
+      {
+         "title": "Primer Competencia con Cuestionarios",
+         "start_date": "2025-04-11",
+         "end_date": "2025-04-21",
+         "quizzes": [
+            {"quiz_id":1},
+            {"quiz_id":3}
+            ]
+      }   
+      - Datos aconsejables en la peticion
+         - el time_limit 0 es sin tiempo, otro valor es en segundos para terminar el intento.
+         - Los tiempos de inicio y final de cada quiz deben estar dentro de los de la competencia, sino error.
+      ```json
+      {
+         "title": "Primer Competencia con Cuestionarios",
+         "start_date": "2025-04-11T12:30:00",
+         "end_date": "2025-04-21",
+         "quizzes": [
+            {
+               "quiz_id":1,
+               "start_time": "2025-04-11T14:00:00",  
+               "end_time": "2025-04-13T14:00:00",  
+               "time_limit": 300
+            },
+            {
+               "quiz_id":4,
+               "start_time": "2025-04-15T14:00:00",  
+               "end_time": "2025-04-15T19:00:00",  
+               "time_limit": 0
+            }
+            ]
+      }   
+
+   - Editar una competencia, ejemplo agregar cuestionario (puede ser una tarea habitual)
+      - Lo mas simple es editar algo general de esta manera:
+      ```json
+      {
+         "credit_cost": 2
+      }
+      - o el estado algo que internamente tambien se realiza automatco
+      ```json
+      {
+         "state": "lista"
+      }
+      - Que sucede con los cuestionarios ?, estos se van a poder:
+         - **agregar** estado de la competencia: 'preparacion', 'lista', 'en curso'
+         - **modificar** estado de la competencia: 'preparacion'
+         - **modificar** estado de la competencia: lista', 'en curso' y las fechas del cuestionario dentro de la competencia sean corectas **NO IMPLEMENTADO AUN**
+         - **eliminar estado de la competencia: 'preparacion'
+         - El "quiz_id" es obligatorio para referenciar al quiz que se modificara o agregara, y el "quiz_id" que estaba antes y ahora no este se elimina, si no debe eliminarse se debe pasar su "quiz_id" y nada para modificar.
+         ```json
+         {
+         "quizzes": [
+         {
+         "quiz_id": 1,
+         "end_time": "2025-04-19T11:25:17",
+         "time_limit": 78
+         },
+         {
+         "quiz_id": 31,
+         "start_time": "2025-04-19T11:25:17",
+         "end_time": null
+         },
+         {
+         "quiz_id": 5
+         }
+      ]
+      }
+   
+   - Inscripciones a una Competencia
+   ```bash
+   curl -X GET http://localhost:5000/competitions/id \
+   -H "Authorization: Bearer YOUR_TOKEN_HERE"
+   ```
 
 ---
 5. PGAdmin
