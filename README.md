@@ -140,75 +140,71 @@ Este comando inicializa todo el entorno: clona o actualiza automáticamente los 
 
    El resultado deberia ser un listado de usuarios.
    
+> **Nota:** Todos los endpoints deben usarse **sin** `/` al final de la ruta (por ejemplo, `/questions/1`).
+
 - ## Preguntas **/questions**
 
-   - Listado de categorias para las preguntas
+   - Listado de categorías para las preguntas
    ```bash
-   curl -X GET http://localhost:5000/questions/categories/
+   curl -X GET http://localhost:5000/questions/categories
    ``` 
-   - Agregar categoria para las preguntas (El name debe ser unico)
+   - Agregar categoría para las preguntas (el name debe ser único)
    ```bash
-   curl -X POST http://localhost:5000/questions/categories/\
+   curl -X POST http://localhost:5000/questions/categories \
    -H "Authorization: Bearer YOUR_TOKEN_HERE" \
-   -d '{"description": "Noticias y eventos deportivos",
-    "name": "Deportes"}'
+   -d '{"description": "Noticias y eventos deportivos", "name": "Deportes"}'
    ``` 
    - Listado de preguntas
    ```bash
-   curl -X GET http://localhost:5000/questions/
+   curl -X GET http://localhost:5000/questions
    ```
-   - Listado de preguntas por categorias
+- Listado de preguntas por categoría
    ```bash
    curl -X GET http://localhost:5000/questions/1 \
    -H "Authorization: Bearer YOUR_TOKEN_HERE"
    ```
 
-   - Obtener una pregunta
+- Obtener una pregunta
    ```bash
    curl -X GET http://localhost:5000/questions/1 \
    -H "Authorization: Bearer YOUR_TOKEN_HERE"
    ```
-   - Agregar una pregunta
-      - La pregunta ya se agrega con sus respuestas
-      - Las respuestas pueden ser existentes o nuevas, normalmente son nuevas.
-      - Datos minimos del body para crear una pregunta con sus respuestas:
-      ```json
-      {"answers": [
-      {
-         "is_correct": false,
-         "text": "Un tipo de software"
-      },
-      {
-         "is_correct": true,
-         "text": "Una simulación de procesos humanos por máquinas"
-      },
-      {
-         "is_correct": false,
-         "text": "Un lenguaje de programación"
-      }],"question": {
-      "category_id": 1,
-      "text": "¿Qué !!!es la inteligencia artificial?" }}
-   
 
-   - Modifica una pregunta
-      - La pregunta se modifica y elimina las respuestas anteriores generando las nuevas.
-      - Datos minimos del body para crear una pregunta con sus respuestas:
-      ```json
-      {"answers": [
-      {
-         "is_correct": false,
-         "text": "Un tipo de software"
-      },
-      {
-         "is_correct": true,
-         "text": "Una simulación de procesos humanos por máquinas"
-      },
-      {
-         "is_correct": false,
-         "text": "Un lenguaje de programación"
-      }],"question": {
-      "text": "¿Qué es la inteligencia artificial?" }}
-   
+- Agregar una pregunta
+   ```bash
+   curl -X POST http://localhost:5000/questions \
+   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+   -H "Content-Type: application/json" \
+   -d '{
+         "answers": [
+            { "is_correct": false, "text": "Un tipo de software" },
+            { "is_correct": true, "text": "Una simulación de procesos humanos por máquinas" },
+            { "is_correct": false, "text": "Un lenguaje de programación" }
+         ],
+         "question": {
+            "category_id": 1,
+            "text": "¿Qué es la inteligencia artificial?"
+         }
+      }'
+   ```
+
+- Modificar una pregunta (por ejemplo, id=1)
+   ```bash
+   curl -X PUT http://localhost:5000/questions/1 \
+   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+   -H "Content-Type: application/json" \
+   -d '{
+         "answers": [
+            { "is_correct": false, "text": "Un tipo de software" },
+            { "is_correct": true, "text": "Una simulación de procesos humanos por máquinas" },
+            { "is_correct": false, "text": "Un lenguaje de programación" }
+         ],
+         "question": {
+            "text": "¿Qué es la inteligencia artificial?"
+         }
+      }'
+   ```
+
 
 - ## Cuestionarios   **/quizzes**
    - Listado de cuestionarios
