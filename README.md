@@ -20,14 +20,18 @@ Asegúrate de tener instaladas las siguientes herramientas en tu sistema:
 
 ---
 
-## 📥 Clonación del Repositorio
-
-Para clonar este repositorio, ejecuta el siguiente comando:
+## 🚀 Primeros pasos rápidos
 
 ```bash
-git clone <URL-DEL-REPOSITORIO>
+git clone https://github.com/cuestionarios-org/infra.git
 cd infra
+bash scripts/init.sh
 ```
+
+Este comando inicializa todo el entorno: clona o actualiza automáticamente los repositorios necesarios y verifica que Docker y Docker Compose estén disponibles. **No necesitas instalar dependencias manualmente en cada servicio, ya que Docker se encarga de todo.**
+
+> **Nota para usuarios de Windows:**  
+> Se recomienda ejecutar los scripts `.sh` usando [Git Bash](https://gitforwindows.org/) o [WSL](https://learn.microsoft.com/es-es/windows/wsl/) para evitar problemas de compatibilidad.
 
 ---
 
@@ -35,14 +39,12 @@ cd infra
 
 1. **Variables de entorno**
 
-   - El archivo `.Template_env` se copiara y se renombrara `.env`
-   - El archivo `.Template_env.dev` se copiara y se renombrara `.env.dev`, aqui se encuentran todas las variables para levantar los servicios en desarrollo.
-   - Estas variables son esenciales para los puertos y servers de todos los servicios.
-
+   - El archivo `.Template_env` se copiará y renombrará como `.env`.
+   - Estas variables son esenciales para los puertos y servidores de todos los servicios.
 
 2. **Estructura de Directorios**
 
-   El repositorio presupone que los servicios `api-gateway`, `auth-service`, etc, están ubicados en directorios adyacentes a la carpeta de infraestructura:
+   Al ejecutar el script de inicialización, los servicios `gateway-api`, `auth-service`, etc., se clonan automáticamente en directorios adyacentes a la carpeta de infraestructura:
 
    ```
    /infra
@@ -51,6 +53,24 @@ cd infra
    /competition-service
    /qa-service
    ```
+
+---
+
+## 📝 Notas adicionales
+
+- Si necesitas limpiar el entorno, puedes usar:  
+  ```bash
+  bash scripts/clean.sh
+  ```
+- Para detener los servicios:  
+  ```bash
+  docker-compose down
+  ```
+- Si tienes problemas de permisos con los scripts, ejecuta:  
+  ```bash
+  chmod +x scripts/*.sh
+  ```
+
 
 ---
 

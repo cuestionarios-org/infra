@@ -3,6 +3,11 @@ set -e
 
 echo "Inicializando el proyecto..."
 
+# Ejecutar el script de clonación si existe
+if [ -f "$(dirname "$0")/clone-services.sh" ]; then
+    bash "$(dirname "$0")/clone-services.sh"
+fi
+
 # Comprueba si Docker está instalado
 if ! [ -x "$(command -v docker)" ]; then
     echo "Error: Docker no está instalado." >&2
